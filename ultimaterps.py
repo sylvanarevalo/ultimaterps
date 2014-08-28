@@ -8,7 +8,7 @@ import itertools
 product= itertools.product
 
 #pstates are the states of the various players
-pstates= product((0,1,2,3), (-1,0,1),(-1,0,1,2),(-1,0,1,2,3,4), (-1,0,1,2)) #wins, butterfly, nuke, rps, croach
+pstates= product((0,1,2,3), (-1,0,1),(-1,0,1,2),(-1,0,1,2,3,4)) #wins, butterfly, nuke, tiesInARow
 #To make the tree acylic I added restrictions on how many times you can play rps, or croach
 states= product(pstates,pstates)
 db={}
@@ -39,20 +39,15 @@ fillTerminalStates()
 import solvegame
 solve = solvegame.solve
 
-def statechanger(state,action,justtied=0):
+def statechanger(state,action,justtied=False):
 	'''This is the meat of the program, it says how to change states.
 	rsolve constantly calls statechanger to figure out what state to recursivly call'''
 	s=map(list,state)
-	#justtied is an optional argument that is 1 if tied with rps, and 2 if tied with croach
-	if justtied == 0:
+	#justtied is an optional argument that is only added as True if trr, or cc 
+	if not justtied:
 		s[0][3] =s[1][3]=4
-		s[0][4]=s[1][4]=2
-	if justtied==1:
+	if justtied:
 		s[0][3]= s[1][3]= s[0][3] -1
-		s[0][4]=s[1][4]=2
-	if justtied==2: 
-		s[0][4]= s[1][4]= s[0][4] -1
-		s[0][3]=s[1][3]=4
 	if action == 'wrr':
 		s[0][0]+=1
 	elif action == 'lrr':
@@ -90,14 +85,14 @@ def rsolve(state):
 	A[3][0]=rsolve(db[statechanger(state,'cr')])
 	A[3][1]=rsolve(db[statechanger(state,'cb')])
 	A[3][2]=rsolve(db[statechanger(state,'cn')])
-	A[3][3]=rsolve(db[statechanger(state,'cc',)])#uh oh, this one will create infinite loop
+	A[3][3]=rsolve(db[statechanger(state,'cc',True)])
 	solved= solve(A)
 	db[state]= [solved[2], A, solved[0],solved[1]]
 	return solved[2]
 	#I'm worried I have row and col reversed. If funny errors, try swiching
 
 #This line should fill up the whole database
-rsolve(((0,1,2,4,2),(0,1,2,4,2)))
+rsolve(((0,1,2,4),(0,1,2,4)))
 
 #now I want to save the hashtable db to a file that can be loaded.
 #To do this I'll pickle it. 
