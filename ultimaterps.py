@@ -42,7 +42,7 @@ solve = solvegame.solve
 def statechanger(state,action,justtied=0):
 	'''This is the meat of the program, it says how to change states.
 	rsolve constantly calls statechanger to figure out what state to recursivly call'''
-
+	s=map(list,state)
 	#justtied is an optional argument that is 1 if tied with rps, and 2 if tied with croach
 	if justtied == 0:
 		s[0][3] =s[1][3]=4
@@ -53,8 +53,6 @@ def statechanger(state,action,justtied=0):
 	if justtied==2: 
 		s[0][4]= s[1][4]= s[0][4] -1
 		s[0][3]=s[1][3]=4
-
-	s=map(list,state)
 	if action == 'wrr':
 		s[0][0]+=1
 	elif action == 'lrr':
@@ -65,7 +63,8 @@ def statechanger(state,action,justtied=0):
 		s[0][0]=0
 		s[1][0]=0
 		s[1][1]+= -1
-	elif action == 'keep filling these in according to rsolve'
+	elif action == 'keep filling these in according to rsolve':
+		pass
 	return map(tuple, s)
 
 
@@ -96,6 +95,24 @@ def rsolve(state):
 	db[state]= [solved[2], A, solved[0],solved[1]]
 	return solved[2]
 	#I'm worried I have row and col reversed. If funny errors, try swiching
+
+#This line should fill up the whole database
+rsolve(((0,1,2,4,2),(0,1,2,4,2)))
+
+#now I want to save the hashtable db to a file that can be loaded.
+#To do this I'll pickle it. 
+import pickle
+output = open('db.pkl', 'wb')
+pickle.dump(db, output)
+output.close()
+
+# #To get it back run this 
+# import pickle
+# pkl_file = open('db.pkl', 'rb')
+# db = pickle.load(pkl_file)
+# pkl_file.close()
+
+
 
 
 
