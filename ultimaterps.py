@@ -9,7 +9,7 @@ product= itertools.product
 
 #pstates are the states of the various players
 pstates= product((0,1,2,3), (-1,0,1),(-1,0,1,2),(-1,0,1,2,3,4)) #wins, butterfly, nuke, tiesInARow
-#To make the tree acylic I added restrictions on how many times you can play rps, or croach
+#To make the tree acylic I added restrictions on how many times you can tie with rps or croach in a row.
 states= product(pstates,pstates)
 db={}
 for s in states:
@@ -70,7 +70,7 @@ def rsolve(state):
 	else start by filling A, and then calling solve on A.'''
 	if db[state][0] != None: return db[state][0]
 	A= db[state][1]
-	A[0][0]= .33333333*rsolve(db[statechanger(state,'wrr')]) + .3333333*rsolve(db[statechanger(state,'lrr')]) + .3333333 rsolve(db[statechanger(state,'trr',True)])
+	A[0][0]= .33333333*rsolve(db[statechanger(state,'wrr')]) + .3333333*rsolve(db[statechanger(state,'lrr')]) + .3333333*rsolve(db[statechanger(state,'trr',True)])
 	A[0][1]=rsolve(db[statechanger(state,'rb')])
 	A[0][2]=rsolve(db[statechanger(state,'rn')])
 	A[0][3]=rsolve(db[statechanger(state,'rc')])
