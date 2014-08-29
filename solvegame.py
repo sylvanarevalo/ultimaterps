@@ -1,3 +1,4 @@
+#This File I found online, other than the return statement it is pure copy paste
 ''' Approximate the strategy oddments for 2 person zero-sum games of perfect information.
 
 Applies the iterative solution method described by J.D. Williams in his classic
