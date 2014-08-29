@@ -30,7 +30,7 @@ def fillTerminalStates():
 		if -1 in state[1]: db[state][0]= 1.0
 		if -1 in state[0] and -1 in state[1]: db[state][0]= .5 #don't think this matters
 		if state[0][0]==3: db[state][0]= 1
-		if state[1][0]==3: db[state][0]= 1
+		if state[1][0]==3: db[state][0]= 0
 
 #this is a messy script, so here I'm modifying the global variable db, so that it contains all the terminal states
 fillTerminalStates()
@@ -61,6 +61,7 @@ def statechanger(state,action,justtied=False):
 	elif action == 'keep filling these in according to rsolve':
 		pass
 	else:
+		#This else statement prevents the infinite loop that occurs because not everything is implemented.
 		s[0][1] = -1
 	return tuple(map(tuple, s))
 
