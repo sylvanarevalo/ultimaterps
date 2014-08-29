@@ -60,6 +60,8 @@ def statechanger(state,action,justtied=False):
 		s[1][1]+= -1
 	elif action == 'keep filling these in according to rsolve':
 		pass
+	else:
+		s[0][1] = -1
 	return tuple(map(tuple, s))
 
 
@@ -98,10 +100,10 @@ rsolve(((0,1,2,4),(0,1,2,4)))
 
 #now I want to save the hashtable db to a file that can be loaded.
 #To do this I'll pickle it. 
-# import pickle
-# output = open('db.pkl', 'wb')
-# pickle.dump(db, output)
-# output.close()
+import pickle
+output = open('db.pkl', 'wb')
+pickle.dump(db, output)
+output.close()
 
 # #To get it back run this 
 # import pickle
