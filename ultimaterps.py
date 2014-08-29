@@ -8,9 +8,9 @@ import itertools
 product= itertools.product
 
 #pstates are the states of the various players
-pstates= product((0,1,2,3), (-1,0,1),(-1,0,1,2),(-1,0,1,2,3,4)) #wins, butterfly, nuke, tiesInARow
+pstates= tuple(product((0,1,2,3), (-1,0,1),(-1,0,1,2),(-1,0,1,2,3,4))) #wins, butterfly, nuke, tiesInARow
 #To make the tree acylic I added restrictions on how many times you can tie with rps or croach in a row.
-states= product(pstates,pstates)
+states= tuple(product(pstates,pstates))
 db={}
 for s in states:
 	val=None
@@ -60,7 +60,7 @@ def statechanger(state,action,justtied=False):
 		s[1][1]+= -1
 	elif action == 'keep filling these in according to rsolve':
 		pass
-	return map(tuple, s)
+	return tuple(map(tuple, s))
 
 
 
@@ -70,46 +70,41 @@ def rsolve(state):
 	else start by filling A, and then calling solve on A.'''
 	if db[state][0] != None: return db[state][0]
 	A= db[state][1]
-	A[0][0]= .33333333*rsolve(db[statechanger(state,'wrr')]) + .3333333*rsolve(db[statechanger(state,'lrr')]) + .3333333*rsolve(db[statechanger(state,'trr',True)])
-	A[0][1]=rsolve(db[statechanger(state,'rb')])
-	A[0][2]=rsolve(db[statechanger(state,'rn')])
-	A[0][3]=rsolve(db[statechanger(state,'rc')])
-	A[1][0]=rsolve(db[statechanger(state,'br')])
-	A[1][1]=rsolve(db[statechanger(state,'bb')])
-	A[1][2]=rsolve(db[statechanger(state,'bn')])
-	A[1][3]=rsolve(db[statechanger(state,'bc')])
-	A[2][0]=rsolve(db[statechanger(state,'nr')])
-	A[2][1]=rsolve(db[statechanger(state,'nb')])
-	A[2][2]=rsolve(db[statechanger(state,'nn')])
-	A[2][3]=rsolve(db[statechanger(state,'nc')])
-	A[3][0]=rsolve(db[statechanger(state,'cr')])
-	A[3][1]=rsolve(db[statechanger(state,'cb')])
-	A[3][2]=rsolve(db[statechanger(state,'cn')])
-	A[3][3]=rsolve(db[statechanger(state,'cc',True)])
+	A[0][0]= .33333333*rsolve(statechanger(state,'wrr')) + .3333333*rsolve(statechanger(state,'lrr')) + .3333333*rsolve(statechanger(state,'trr',True))
+	A[0][1]=rsolve(statechanger(state,'rb'))
+	A[0][2]=rsolve(statechanger(state,'rn'))
+	A[0][3]=rsolve(statechanger(state,'rc'))
+	A[1][0]=rsolve(statechanger(state,'br'))
+	A[1][1]=rsolve(statechanger(state,'bb'))
+	A[1][2]=rsolve(statechanger(state,'bn'))
+	A[1][3]=rsolve(statechanger(state,'bc'))
+	A[2][0]=rsolve(statechanger(state,'nr'))
+	A[2][1]=rsolve(statechanger(state,'nb'))
+	A[2][2]=rsolve(statechanger(state,'nn'))
+	A[2][3]=rsolve(statechanger(state,'nc'))
+	A[3][0]=rsolve(statechanger(state,'cr'))
+	A[3][1]=rsolve(statechanger(state,'cb'))
+	A[3][2]=rsolve(statechanger(state,'cn'))
+	A[3][3]=rsolve(statechanger(state,'cc',True))
 	solved= solve(A)
 	db[state]= [solved[2], A, solved[0],solved[1]]
 	return solved[2]
 	#I'm worried I have row and col reversed. If funny errors, try swiching
 
 #This line should fill up the whole database
+#print isinstance(statechanger(((0,1,2,4),(0,1,2,4)),'wrr'),tuple)
+#print db[statechanger(((0,1,2,4),(0,1,2,4)),'wrr')]
 rsolve(((0,1,2,4),(0,1,2,4)))
 
 #now I want to save the hashtable db to a file that can be loaded.
 #To do this I'll pickle it. 
-import pickle
-output = open('db.pkl', 'wb')
-pickle.dump(db, output)
-output.close()
+# import pickle
+# output = open('db.pkl', 'wb')
+# pickle.dump(db, output)
+# output.close()
 
 # #To get it back run this 
 # import pickle
 # pkl_file = open('db.pkl', 'rb')
 # db = pickle.load(pkl_file)
 # pkl_file.close()
-
-
-
-
-
-
-

@@ -30,5 +30,5 @@ def solve(payoff_matrix, iterations=100):
 ###########################################
 # Example solutions to two pay-off matrices
       
-print solve([[2,3,1,4], [1,2,5,4], [2,3,4,1], [4,2,2,2]])   # Example on page 185
-print solve([[4,0,2], [6,7,1]])                             # Exercise 2 number 3
+#print solve([[2,3,1,4], [1,2,5,4], [2,3,4,1], [4,2,2,2]])   # Example on page 185
+#print solve([[4,0,2], [6,7,1]])                             # Exercise 2 number 3
