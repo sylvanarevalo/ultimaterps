@@ -58,11 +58,55 @@ def statechanger(state,action,justtied=False):
 		s[0][0]=0
 		s[1][0]=0
 		s[1][1]+= -1
-	elif action == 'keep filling these in according to rsolve':
+	elif action == 'rn':
+		s[1][0]+=1
+		s[1][2]+= -1
+	elif action == 'rc':
+		s[0][0]+=1
+	elif action == 'br':
+		s[0][0]=0
+		s[1][0]=0
+		s[0][1]+= -1
+	elif action == 'bb':
+		s[0][0]=0
+		s[1][0]=0
+		s[1][1]+= -1
+		s[0][1]+=-1
+	elif action == 'bn':
+		s[1][0]+=1
+		s[0][1]+= -1
+	elif action == 'bc':
+		s[0][0]=0
+		s[1][0]=0
+		s[0][1]+= -1
+	elif action == 'nr':
+		s[0][0]+=1
+		s[0][2]+= -1
+	elif action == 'nb':
+		s[0][0]+=1
+		s[0][2]+= -1
+		s[1][1]+= -1
+	elif action == 'nn':
+		s[1][2]+=-1
+		s[0][2]+= -1
+	elif action == 'nc':
+		s[1][0]+=1
+		s[0][2]+= -1
+	elif action == 'cr':
+		s[1][0]+=1
+	elif action == 'cb':
+		s[0][0]=0
+		s[1][0]-0
+		s[1][1]+= -1
+	elif action == 'cn':
+		s[0][0]+=1
+		s[1][2]+= -1
+	elif action == 'cc':
 		pass
 	else:
+		print "SHOULD NEVER BE HERE!"
 		#This else statement prevents the infinite loop that occurs because not everything is implemented.
-		s[0][1] = -1
+		#s[0][1] = -1
 	return tuple(map(tuple, s))
 
 
