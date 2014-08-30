@@ -26,10 +26,18 @@ def fillTerminalStates():
 	Making an illegal move means you lose: so you wont ever play it
 	If you didnt make an illegal move, but have 3 wins, then you win'''
 	for state in states:
-		if -1 in state[0]: db[state][0] = 0.0
-		if -1 in state[1]: db[state][0]= 1.0
-		if -1 in state[0] and -1 in state[1]: db[state][0]= .5 #don't think this matters
-		if state[0][0]==3: db[state][0]= 1
+		if -1 in state[0]:
+			db[state][0] = 0.0
+			continue
+		if -1 in state[1]:
+			db[state][0]= 1.0
+			continue
+		if -1 in state[0] and -1 in state[1]:
+			db[state][0]= .5 #don't think this matters
+			continue
+		if state[0][0]==3:
+			db[state][0]= 1
+			continue
 		if state[1][0]==3: db[state][0]= 0
 
 #this is a messy script, so here I'm modifying the global variable db, so that it contains all the terminal states
@@ -75,6 +83,7 @@ def statechanger(state,action,justtied=False):
 	elif action == 'bn':
 		s[1][0]+=1
 		s[0][1]+= -1
+		s[1][2]+= -1
 	elif action == 'bc':
 		s[0][0]=0
 		s[1][0]=0
@@ -96,7 +105,7 @@ def statechanger(state,action,justtied=False):
 		s[1][0]+=1
 	elif action == 'cb':
 		s[0][0]=0
-		s[1][0]-0
+		s[1][0]=0
 		s[1][1]+= -1
 	elif action == 'cn':
 		s[0][0]+=1
