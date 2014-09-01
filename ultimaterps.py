@@ -4,13 +4,19 @@
 # I hope that the only thing left to do is to fill out statechanger.
 
 #itertools is a useful python package that can do things like make the cartesian product
+ #only change this line:
+p1 = (0,2,2,5)
+p2 = (0,2,2,5)
+w1 = 2;
+w2 = 2;
+
 import itertools
 product= itertools.product
-
 #pstates are the states of the various players
-pstates= tuple(product((0,1,2,3), (-1,0,1),(-1,0,1,2),(-1,0,1,2,3,4))) #wins, butterfly, nuke, tiesInARow
+p1states= tuple(product(tuple(range(w1+1)), tuple(range(-1,p1[1]+1)),tuple(range(-1,p1[2]+1)),tuple(range(-1,p1[3]+1)))) #wins, butterfly, nuke, tiesInARow
 #To make the tree acylic I added restrictions on how many times you can tie with rps or croach in a row.
-states= tuple(product(pstates,pstates))
+p2states= tuple(product(tuple(range(w2+1)), tuple(range(-1,p2[1]+1)),tuple(range(-1,p2[2]+1)),tuple(range(-1,p2[3]+1))))
+states= tuple(product(p1states,p2states))
 db={}
 for s in states:
 	val=None
@@ -21,7 +27,7 @@ for s in states:
 	p2strat= None
 	db[s]= [val,A,p1strat,p2strat]
 
-def fillTerminalStates():
+def fillTerminalStates(w1,w2):
 	'''sets value of leaf nodes, so that recursion can stop
 	Making an illegal move means you lose: so you wont ever play it
 	If you didnt make an illegal move, but have 3 wins, then you win'''
@@ -35,13 +41,13 @@ def fillTerminalStates():
 		if -1 in state[0] and -1 in state[1]:
 			db[state][0]= .5 #don't think this matters
 			continue
-		if state[0][0]==3:
+		if state[0][0]==w1:
 			db[state][0]= 1
 			continue
-		if state[1][0]==3: db[state][0]= 0
+		if state[1][0]==w2: db[state][0]= 0
 
 #this is a messy script, so here I'm modifying the global variable db, so that it contains all the terminal states
-fillTerminalStates()
+fillTerminalStates(w1,w2)
 
 #solvegame is another file in this folder
 import solvegame
@@ -53,7 +59,7 @@ def statechanger(state,action,justtied=False):
 	s=map(list,state)
 	#justtied is an optional argument that is only added as True if trr, or cc 
 	if not justtied:
-		s[0][3] =s[1][3]=4
+		s[0][3] =s[1][3]=p1[3]
 	if justtied:
 		s[0][3]= s[1][3]= s[0][3] -1
 	if action == 'wrr':
@@ -126,7 +132,10 @@ def rsolve(state):
 	else start by filling A, and then calling solve on A.'''
 	if db[state][0] != None: return db[state][0]
 	A= db[state][1]
-	A[0][0]= .33333333*rsolve(statechanger(state,'wrr')) + .3333333*rsolve(statechanger(state,'lrr')) + .3333333*rsolve(statechanger(state,'trr',True))
+	if state[0][3]== 0:
+		A[0][0]= .5*rsolve(statechanger(state,'wrr')) + .5*rsolve(statechanger(state,'lrr')) 
+	else:
+		A[0][0]= .33333333*rsolve(statechanger(state,'wrr')) + .3333333*rsolve(statechanger(state,'lrr')) + .3333333*rsolve(statechanger(state,'trr',True))
 	A[0][1]=rsolve(statechanger(state,'rb'))
 	A[0][2]=rsolve(statechanger(state,'rn'))
 	A[0][3]=rsolve(statechanger(state,'rc'))
@@ -150,7 +159,7 @@ def rsolve(state):
 #This line should fill up the whole database
 #print isinstance(statechanger(((0,1,2,4),(0,1,2,4)),'wrr'),tuple)
 #print db[statechanger(((0,1,2,4),(0,1,2,4)),'wrr')]
-rsolve(((0,1,2,4),(0,1,2,4)))
+rsolve((p1,p2))
 
 #now I want to save the hashtable db to a file that can be loaded.
 #To do this I'll pickle it. 
